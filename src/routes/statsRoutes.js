@@ -11,10 +11,17 @@ router.get("/stats", async (req, res, next) => {
     const totalAlbums = (await Song.distinct("album")).length;
     const totalGenres = (await Song.distinct("genre")).length;
 
+    const transformedData = {
+      totalSongs: Number(totalSongs),
+      totalArtists: Number(totalArtists),
+      totalAlbums: Number(totalAlbums),
+      totalGenres: Number(totalGenres),
+    };
+
     sendResponse(
       res,
       200,
-      { totalSongs, totalArtists, totalAlbums, totalGenres },
+      transformedData,
       "Statistics retrieved successfully"
     );
   } catch (e) {
