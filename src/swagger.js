@@ -19,7 +19,7 @@ const doc = {
   },
   host: SERVER_HOST,
   basePath: "/",
-  schemes: ["http", "https"],
+  schemes: ["https"],
 };
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
