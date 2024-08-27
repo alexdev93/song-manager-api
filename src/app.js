@@ -4,6 +4,8 @@ const connectDB = require("./config/db");
 const songRoutes = require("./routes/songRoutes")
 const statsRoutes = require("./routes/statsRoutes");
 const errorHandler = require("./middleware/errorHandler");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger_output.json");
 require("dotenv").config();
 
 const app = express();
@@ -24,6 +26,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", songRoutes);
 app.use("/api", statsRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Global Error Handler
 app.use(errorHandler);
