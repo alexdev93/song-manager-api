@@ -38,6 +38,7 @@ const songSchema = new mongoose.Schema(
           "Country",
           "Electronic",
           "Synthwave",
+          "Reggae"
         ],
         message: "Invalid genre",
       },
