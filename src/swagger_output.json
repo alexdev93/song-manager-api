@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Song Manager Api Doc",
+    "title": "Song Manager API Doc",
     "description": "API documentation for Song Manager Service",
     "version": "1.0.0",
     "contact": {
@@ -12,10 +12,11 @@
   },
   "basePath": "/",
   "schemes": [
+    "http",
     "https"
   ],
   "paths": {
-    "/": {
+    "/api": {
       "get": {
         "description": "",
         "responses": {

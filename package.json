@@ -17,6 +17,8 @@
     "express": "^4.19.2",
     "install": "^0.13.0",
     "mongoose": "^8.5.4",
+    "mongoose-auto-increment": "^5.0.1",
+    "mongoose-sequence": "^6.0.1",
     "npm": "^10.8.2"
   },
   "devDependencies": {

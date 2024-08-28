@@ -1,8 +1,14 @@
 const mongoose = require("mongoose");
+const mongooseSequence = require("mongoose-sequence");
 
-// Define the schema for the Song model
+const AutoIncrement = mongooseSequence(mongoose);
+
 const songSchema = new mongoose.Schema(
   {
+    id: {
+      type: Number,
+      unique: true, // Ensure uniqueness
+    },
     title: {
       type: String,
       required: [true, "Title is required"],
@@ -38,7 +44,7 @@ const songSchema = new mongoose.Schema(
           "Country",
           "Electronic",
           "Synthwave",
-          "Reggae"
+          "Reggae",
         ],
         message: "Invalid genre",
       },
@@ -57,6 +63,12 @@ const songSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Apply the auto-increment plugin to the schema
+songSchema.plugin(AutoIncrement, {
+  inc_field: "id", // Field to be auto-incremented
+  start_seq: 1, // Starting sequence value
+});
 
 // Create the Song model from the schema
 const Song = mongoose.model("Song", songSchema);

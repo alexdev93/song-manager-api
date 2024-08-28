@@ -27,7 +27,8 @@ router.get("/songs", async (req, res, next) => {
 // Get a song by ID
 router.get("/songs/:id", async (req, res, next) => {
   try {
-    const song = await Song.findById(req.params.id);
+    const songId = parseInt(req.params.id, 10);
+    const song = await Song.findOne({ id: songId });
     if (!song) {
       const error = new Error("Song not found");
       error.statusCode = 404;
@@ -42,9 +43,18 @@ router.get("/songs/:id", async (req, res, next) => {
 // Update a song by ID
 router.patch("/songs/:id", async (req, res, next) => {
   try {
-    const song = await Song.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      const error = new Error("Invalid song ID format");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const song = await Song.findOneAndUpdate(
+      { id }, // Query by auto-incrementing 'id'
+      req.body,
+      { new: true }
+    );
     if (!song) {
       const error = new Error("Song not found");
       error.statusCode = 404;
@@ -59,7 +69,8 @@ router.patch("/songs/:id", async (req, res, next) => {
 // Remove a song by ID
 router.delete("/songs/:id", async (req, res, next) => {
   try {
-    const song = await Song.findByIdAndDelete(req.params.id);
+    const songId = parseInt(req.params.id, 10);
+    const song = await Song.findOneAndDelete({ id: songId });
     if (!song) {
       const error = new Error("Song not found");
       error.statusCode = 404;

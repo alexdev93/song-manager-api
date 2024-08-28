@@ -5,6 +5,7 @@ const songRoutes = require("./routes/songRoutes")
 const statsRoutes = require("./routes/statsRoutes");
 const errorHandler = require("./middleware/errorHandler");
 const swaggerUi = require("swagger-ui-express");
+const Song = require("./models/song")
 const swaggerFile = require("./swagger_output.json");
 require("dotenv").config();
 
@@ -13,30 +14,33 @@ const PORT = process.env.PORT || 8080;
 
 app.use(cors({
   origin: "*", 
-  methods: "GET,POST,PUT,DELETE",
+  methods: "GET,POST,PATCH,DELETE",
   allowedHeaders: "Content-Type,Authorization"
 }));
 
 app.use(express.json());
+// app.use(clientRequestLogger);
 
 // Default Route
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Song Manager API is running");
 });
 
 app.use("/api", songRoutes);
 app.use("/api", statsRoutes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Global Error Handler
 app.use(errorHandler);
+const mongoose = require("mongoose");
 
-
+// Run the update script
 connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+.then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
     });
+    //  mongoose.connection.db.dropDatabase();
   })
   .catch((e) => {
     console.error("Database connection failed:", e);
