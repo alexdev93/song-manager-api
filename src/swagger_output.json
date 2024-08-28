@@ -37,6 +37,23 @@
       },
       "get": {
         "description": "",
+        "parameters": [
+          {
+            "name": "genre",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "artist",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "album",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
