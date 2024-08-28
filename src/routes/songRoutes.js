@@ -17,10 +17,19 @@ router.post("/songs", async (req, res, next) => {
 // List all songs
 router.get("/songs", async (req, res, next) => {
   try {
-    const songs = await Song.find({});
+     const { genre, artist, album } = req.query;
+     const hasFilters = genre || artist || album;
+     const filter = {};
+
+     if (genre) filter.genre = genre;
+     if (artist) filter.artist = artist;
+     if (album) filter.album = album;
+
+     const songs = hasFilters ? await Song.find(filter) : await Song.find();
+
     sendResponse(res, 200, songs, "Songs retrieved successfully");
   } catch (e) {
-    next(e); // Pass errors to the global error handler
+    next(e); 
   }
 });
 
