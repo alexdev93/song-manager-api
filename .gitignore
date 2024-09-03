@@ -34,10 +34,6 @@ typings/
 # Optional REPL history
 .node_repl_history
 
-# Environment variables
-.env
-.env.local
-.env.*.local
 
 # Next.js build output
 .next/
@@ -54,11 +50,6 @@ dist/
 # Serverless directories
 .serverless/
 .cloudformation/
-
-# Docker
-Dockerfile
-Dockerfile.dev
-docker-compose.yml
 
 # MacOS files
 .DS_Store
