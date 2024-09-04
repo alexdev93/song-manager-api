@@ -85,9 +85,6 @@ out/
 .DS_Store
 Thumbs.db
 
-# Environment variables
-.env
-
 # npm package lock
 package-lock.json
 yarn.lock

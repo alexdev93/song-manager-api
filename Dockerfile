@@ -1,5 +1,5 @@
-# Stage 1: Build
-FROM node:18 AS build
+# Use an official Node.js runtime as the base image
+FROM node:18-slim
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -11,22 +11,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Run build script if applicable (e.g., if using TypeScript or a build step)
+# Build the application (optional, if you have a build step like TypeScript)
 # RUN npm run build
-
-# Stage 2: Production
-FROM node:18-slim
-
-# Set working directory
-WORKDIR /usr/src/app
-
-# Copy only production dependencies and necessary files from the build stage
-COPY --from=build /usr/src/app/node_modules /usr/src/app/node_modules
-COPY --from=build /usr/src/app /usr/src/app
-
-# Install only production dependencies (if not using multi-stage)
-# COPY package*.json ./
-# RUN npm install --only=production
 
 # Expose the port the app runs on
 EXPOSE 8080
