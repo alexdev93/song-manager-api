@@ -22,7 +22,6 @@ router.get("/songs", async (req, res, next) => {
   const filter = buildFilter({ genre, artist, album });
   const pagination = buildPagination({ page, limit });
 
-
   try {
     const [songs, totalSongs] = await Promise.all([
       Song.find(filter).skip(pagination.skip).limit(limit),
@@ -31,25 +30,22 @@ router.get("/songs", async (req, res, next) => {
 
     res.set({
       "Access-Control-Expose-Headers": "Content-Range, X-Total-Count",
-      "Content-Range": `songs ${pagination.skip}-${pagination.skip + songs.length - 1}/${totalSongs}`,
+      "Content-Range": `songs ${pagination.skip}-${
+        pagination.skip + songs.length - 1
+      }/${totalSongs}`,
       "X-Total-Count": totalSongs,
     });
 
-    sendResponse(
-      res,
-      200,
-      {
-        songs,
-        totalPages: Math.ceil(totalSongs / limit),
-        currentPage: page,
-        totalSongs,
-      }
-    );
+    sendResponse(res, 200, {
+      songs,
+      totalPages: Math.ceil(totalSongs / limit),
+      currentPage: parseInt(page, 10),
+      totalSongs,
+    });
   } catch (e) {
     next(e);
   }
 });
-
 
 // Get a song by ID
 router.get("/songs/:id", async (req, res, next) => {
