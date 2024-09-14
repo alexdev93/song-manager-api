@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Song = require("../models/song");
 const sendResponse = require("../utils/responseHelper");
+const { buildFilter, buildPagination } = require("../utils/queryHelper");
 
 // Create a new song
 router.post("/songs", async (req, res, next) => {
@@ -16,22 +17,39 @@ router.post("/songs", async (req, res, next) => {
 
 // List all songs
 router.get("/songs", async (req, res, next) => {
+  const { genre, artist, album, page = 1, limit = 10 } = req.query;
+
+  const filter = buildFilter({ genre, artist, album });
+  const pagination = buildPagination({ page, limit });
+
+
   try {
-     const { genre, artist, album } = req.query;
-     const hasFilters = genre || artist || album;
-     const filter = {};
+    const [songs, totalSongs] = await Promise.all([
+      Song.find(filter).skip(pagination.skip).limit(limit),
+      Song.countDocuments(filter),
+    ]);
 
-     if (genre) filter.genre = genre;
-     if (artist) filter.artist = artist;
-     if (album) filter.album = album;
+    res.set({
+      "Access-Control-Expose-Headers": "Content-Range, X-Total-Count",
+      "Content-Range": `songs ${pagination.skip}-${pagination.skip + songs.length - 1}/${totalSongs}`,
+      "X-Total-Count": totalSongs,
+    });
 
-     const songs = hasFilters ? await Song.find(filter) : await Song.find();
-
-    sendResponse(res, 200, songs, "Songs retrieved successfully");
+    sendResponse(
+      res,
+      200,
+      {
+        songs,
+        totalPages: Math.ceil(totalSongs / limit),
+        currentPage: page,
+        totalSongs,
+      }
+    );
   } catch (e) {
-    next(e); 
+    next(e);
   }
 });
+
 
 // Get a song by ID
 router.get("/songs/:id", async (req, res, next) => {
