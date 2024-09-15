@@ -20,12 +20,6 @@ app.use(
 );
 
 app.use(express.json());
-// app.use(clientRequestLogger);
-
-// Default Route
-app.get("/api", (req, res) => {
-  res.send("Song Manager API is running");
-});
 
 app.use("/api", songRoutes);
 app.use("/api", statsRoutes);
@@ -33,7 +27,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Global Error Handler
 app.use(errorHandler);
-const mongoose = require("mongoose");
 
 // Run the update script
 connectDB()
@@ -41,21 +34,36 @@ connectDB()
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
-    //  mongoose.connection.db.dropDatabase();
   })
   .catch((e) => {
     console.error("Database connection failed:", e);
     process.exit(1);
   });
+  
 
+  const mongoose = require("mongoose");
+// Note that uncaughtException is a very crude mechanism for
+// dealing with errors. It is generally better to use
+// try/catch blocks and handle the errors explicitly. This
+// event is best used for performing some last-minute cleanup
+// before the process exits. Not recommended for production
+// code, but can be useful for debugging.
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
-  process.exit(1);
+  // Make sure we close the database connection before exiting
+  mongoose.connection.close().then(() => {
+    process.exit(1);
+  });
 });
 
+
+// In Node.js, any unhandled promise rejection will terminate the process.
+// This listener allows us to log the error before exiting.
 process.on("unhandledRejection", (err) => {
   console.error("Unhandled Rejection:", err);
-  process.exit(1);
+  // Make sure we close the database connection before exiting
+  mongoose.connection.close().then(() => {
+    process.exit(1);
+  });
 });
-
 module.exports = app;
