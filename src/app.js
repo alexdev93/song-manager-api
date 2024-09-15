@@ -29,7 +29,7 @@ app.get("/api", (req, res) => {
 
 app.use("/api", songRoutes);
 app.use("/api", statsRoutes);
-app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Global Error Handler
 app.use(errorHandler);

@@ -12,10 +12,11 @@
   },
   "basePath": "/",
   "schemes": [
+    "http",
     "https"
   ],
   "paths": {
-    "/api": {
+    "/": {
       "get": {
         "description": "",
         "responses": {
@@ -49,6 +50,16 @@
           },
           {
             "name": "album",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
             "in": "query",
             "type": "string"
           }
